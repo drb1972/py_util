@@ -1,4 +1,4 @@
-//PROD001X JOB (124400000),'BROADCOM',CLASS=A,MSGCLASS=X,  
+//PROD001X JOB (124400000),'DIEGO',CLASS=A,MSGCLASS=X,  
 //      NOTIFY=&SYSUID
 //****************************************************     
 //DELETEDS EXEC PGM=IDCAMS
