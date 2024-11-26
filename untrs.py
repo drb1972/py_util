@@ -61,7 +61,7 @@ if rc!='CC 0000':
    os.system('code '+sysprint)
 else:
    local_untersed='.\\out\\untersed.txt'
-   zw.download_zos_file(remote_file_untersed,local_untersed,'')
+   zw.download_zos_file(remote_file_untersed,local_untersed)
    os.system('code '+local_untersed)
 
 exit()

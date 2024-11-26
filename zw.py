@@ -1,5 +1,7 @@
 import subprocess
 import json
+
+
 # execute_command
 # args: 
 #    'command'(str) command to be executed
@@ -103,7 +105,7 @@ def upload_zos_file(remote_file, local_file, flags):
 #    'flags'(str) zowe flags '-b'
 # -----
 # returns:
-def download_zos_file(remote_file, local_file, flags):
+def download_zos_file(remote_file, local_file, flags=''):
    remote_file=remote_file.upper()
    command='zowe zos-files download data-set "' + remote_file +'" -f "'+ local_file +'" ' + flags
    # print(command)
@@ -119,7 +121,7 @@ def download_zos_file(remote_file, local_file, flags):
 # returns:
 #    ret_cod
 #    jobid
-def submit_local_jcl(jcl,flags):
+def submit_local_jcl(jcl,flags=''):
    command='zowe zos-jobs submit local-file "' + jcl +'" ' + flags + ' --wfo --rfj'
    # print(command)
    print('Submiting '+ jcl + ' ...')
@@ -143,3 +145,20 @@ def find_userid():
    sto, ste, rc = execute_command(command)
    userid = sto.split(" ")[1]
    return(userid)
+
+
+# check_zos_file_name
+# args: 
+#    'file'(str) file name to check
+# -----
+# returns:
+#    True - False 
+#    message
+def check_zos_file(file):
+   file=file.upper()
+   command='zowe zos-files list data-set "' + file +'"'
+   # print(command)
+   print('Checking ' + file + ' ...')
+   sto, ste, rc = execute_command(command)
+   if file in sto: return(True)
+   else: return(False)
