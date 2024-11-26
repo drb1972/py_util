@@ -1,7 +1,6 @@
 import zw
 
+file='PROD0d.Q4#@-$S'
 
-
-print(zw.find_userid())
-
+print(zw.check_zos_file_name(file))
 exit()

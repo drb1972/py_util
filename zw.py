@@ -49,9 +49,9 @@ def execute_command(command):
 #    True or False
 def check_zos_file(file):
    file=file.upper()
-   command='zowe zos-files list data-set "' + file +'"'
+   command=f'zowe zos-files list data-set "{file}"'
    # print(command)
-   print('Checking ' + file + ' ...')
+   print(f'Checking {file} ...')
    sto, ste, rc = execute_command(command)
    if file in sto: return(True)
    else: return(False)
@@ -63,9 +63,9 @@ def check_zos_file(file):
 # -----
 # returns:
 def del_zos_file(file):
-   command='zowe zos-files delete data-set "' + file +'" -f'
+   command=f'zowe zos-files delete data-set "{file}" -f'
    # print(command)
-   print('Deleting ' + file + ' ...')
+   print(f'Deleting {file} ...')
    sto, ste, rc = execute_command(command)
 
 
@@ -75,9 +75,9 @@ def del_zos_file(file):
 # -----
 # returns:
 def cre_trs_file(file):
-   command='zowe zos-files create ps "' +  file + '" --rl 1024 --bs 1024 --rf FB --sz 10CYL'
+   command=f'zowe zos-files create ps "{file}" --rl 1024 --bs 1024 --rf FB --sz 10CYL'
    # print(command)
-   print('Creating ' + file + ' ...')
+   print(f'Creating {file} ...')
    sto, ste, rc = execute_command(command)
 
 
@@ -89,11 +89,11 @@ def cre_trs_file(file):
 #    'flags'(str) zowe flags '-b'
 # -----
 # returns:
-def upload_zos_file(remote_file, local_file, flags):
+def upload_zos_file(remote_file, local_file, flags=''):
    remote_file=remote_file.upper()
-   command='zowe zos-files upload file-to-data-set "' + local_file +'" "'+ remote_file +'" ' + flags
+   command=f'zowe zos-files upload file-to-data-set "{local_file}" "{remote_file}" {flags}'
    # print(command)
-   print('Uploading ' + local_file + ' to ' + remote_file + ' ...')
+   print(f'Uploading {local_file} to {remote_file} ...')
    sto, ste, rc = execute_command(command)
 
 
@@ -107,9 +107,9 @@ def upload_zos_file(remote_file, local_file, flags):
 # returns:
 def download_zos_file(remote_file, local_file, flags=''):
    remote_file=remote_file.upper()
-   command='zowe zos-files download data-set "' + remote_file +'" -f "'+ local_file +'" ' + flags
+   command=f'zowe zos-files download data-set "{remote_file}" -f "{local_file}" {flags}'
    # print(command)
-   print('Downloading in ' + local_file + ' ...')
+   print(f'Downloading in {local_file} ...')
    sto, ste, rc = execute_command(command)
 
 # submit_local_jcl (wait for execution and response in json format)
@@ -122,9 +122,9 @@ def download_zos_file(remote_file, local_file, flags=''):
 #    ret_cod
 #    jobid
 def submit_local_jcl(jcl,flags=''):
-   command='zowe zos-jobs submit local-file "' + jcl +'" ' + flags + ' --wfo --rfj'
+   command=f'zowe zos-jobs submit local-file "{jcl}" {flags} --wfo --rfj'
    # print(command)
-   print('Submiting '+ jcl + ' ...')
+   print(f'Submiting {jcl} ...')
    sto, ste, rc = execute_command(command)
    sto = json.loads(sto)
    ret_cod=sto.get('data', {}).get('retcode')
@@ -154,11 +154,37 @@ def find_userid():
 # returns:
 #    True - False 
 #    message
-def check_zos_file(file):
+def check_zos_file_name(file):
    file=file.upper()
-   command='zowe zos-files list data-set "' + file +'"'
-   # print(command)
-   print('Checking ' + file + ' ...')
-   sto, ste, rc = execute_command(command)
-   if file in sto: return(True)
-   else: return(False)
+   tf=True
+   message='Correct File Name'
+   if len(file)>44:
+      tf=False
+      message='Error: A data set name cannot be longer than 44 characters'
+   elif '.' not in file:
+      tf=False
+      message='Error: A data set name must be composed of at least two joined character segments (qualifiers), separated by a period (.)'
+   elif '..' in file:
+      tf=False
+      message='Error: A data set name cannot contain two successive periods'
+   elif file[-1]=='.':
+      tf=False
+      message='Error: A data set name cannot end with a period'
+   else:
+      hlqs=file.split('.')
+      valid_first_char=''.join(chr(i) for i in range(ord('A'), ord('Z') + 1))+'#@$'
+      valid_rest =''.join(chr(i) for i in range(ord('0'), ord('9') + 1))+valid_first_char+'-'
+      for hlq in hlqs:
+         if len(hlq)>8:
+            tf=False
+            message='Error: A segment cannot be longer than eight characters'
+         elif hlq[0] not in valid_first_char:
+            tf=False
+            message='Error: The first segment character must be either a letter or one of the following three special characters: #, @, $'
+         else: 
+            for i in hlq[1:]:
+               if i not in valid_rest:
+                  tf=False
+                  message='Error: The remaining seven characters in a segment can be letters, numbers, special characters (only #, @, or $), or a hyphen (-)'
+
+   return(tf,message)
