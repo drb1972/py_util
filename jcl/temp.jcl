@@ -7,10 +7,10 @@
     DELETE PROD001.UNTRS
     SET MAXCC = 0                                     
 //****************************************************     
-//UNTERPDS EXEC PGM=TRSMAIN,PARM=UNPACK                    
+//UNTERSE  EXEC PGM=TRSMAIN,PARM=UNPACK                    
 //SYSPRINT DD SYSOUT=*                                     
 //INFILE   DD DSN=PROD001.TRS,                            
 //            DISP=SHR                                     
 //OUTFILE  DD DSN=PROD001.UNTRS,
 //            DISP=(NEW,CATLG),                            
-//            SPACE=(CYL,(10,10))  
+//            SPACE=(CYL,(10,10,10))  

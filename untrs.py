@@ -19,7 +19,7 @@ type=args.type.upper()
 # check if file exists
 local_file=args.file
 if not os.path.isfile(local_file):
-   print(local_file + "doesn't exist")
+   print(f"{local_file} doesn't exist")
    exit(8)
 
 # find userid to set HLQ
@@ -51,6 +51,7 @@ with open('jcl\\temp.jcl','wt') as o:
       elif type=='PDS': i=i.replace('<space>','SPACE=(CYL,(10,10,10))')
       o.write(i)
 
+# submit /jcl/temp.jcl
 rc,jobid=zw.submit_local_jcl('jcl\\temp.jcl','-d out -e txt')
 
 print(rc)
@@ -59,7 +60,7 @@ print(jobid)
 if rc!='CC 0000':
    sysprint='.\\out\\'+jobid+'\\UNTERPDS\\SYSPRINT.txt'
    os.system('code '+sysprint)
-else:
+elif type=='seq':
    local_untersed='.\\out\\untersed.txt'
    zw.download_zos_file(remote_file_untersed,local_untersed)
    os.system('code '+local_untersed)

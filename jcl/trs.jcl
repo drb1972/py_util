@@ -7,10 +7,10 @@
     DELETE <outfile>
     SET MAXCC = 0                                     
 //****************************************************     
-//UNTERSE  EXEC PGM=TRSMAIN,PARM=UNPACK                    
-//SYSPRINT DD SYSOUT=*                                     
-//INFILE   DD DSN=<infile>,                            
-//            DISP=SHR                                     
+//TERSE    EXEC PGM=TRSMAIN,PARM='PACK'
+//SYSPRINT DD SYSOUT=*
+//INFILE   DD DISP=SHR,DSN=<infile>
 //OUTFILE  DD DSN=<outfile>,
-//            DISP=(NEW,CATLG),                            
-//            <space>  
+//            DCB=(RECFM=FB,BLKSIZE=6144,LRECL=1024),
+//            UNIT=SYSDA,SPACE=(CYL,(750,200),RLSE),
+//            DISP=(NEW,CATLG,DELETE)
