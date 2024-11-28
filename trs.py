@@ -2,6 +2,11 @@ import sys
 import argparse
 import os
 import zw
+from colorama import init, Fore, Back, Style
+init()
+import time
+start_time = time.time()
+
 
 try:
    parser = argparse.ArgumentParser(description='Terse file and donwload to ./out folder')
@@ -23,12 +28,13 @@ if not tf:
 
 # check if file to terse exists
 if not zw.check_zos_file(remote_file):
-   print(f"File {remote_file} doen't exist")
+   print(f"File {remote_file} doesn't exist")
    exit(8)
 
 # find userid to set HLQ
 hlq=zw.find_userid().upper()
-print('userid: '+hlq)
+print(Fore.YELLOW + Back.BLUE + f'userid: {hlq}')
+print(Style.RESET_ALL)
 
 remote_file_tersed=hlq + '.TRS'
 
@@ -55,5 +61,9 @@ else:
    local_file_tersed=f'.\\out\\{remote_file}.trs'
    zw.download_zos_file(remote_file_tersed,local_file_tersed,'-b')
    print(f'The tersed file is in {local_file_tersed}')
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Elapsed time: {elapsed_time} seconds")
 
 exit()

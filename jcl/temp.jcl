@@ -4,13 +4,13 @@
 //DELETEDS EXEC PGM=IDCAMS
 //SYSPRINT DD SYSOUT=*
 //SYSIN    DD *
-    DELETE PROD001.UNTRS
+    DELETE PROD001.TRS
     SET MAXCC = 0                                     
 //****************************************************     
-//UNTERSE  EXEC PGM=TRSMAIN,PARM=UNPACK                    
-//SYSPRINT DD SYSOUT=*                                     
-//INFILE   DD DSN=PROD001.TRS,                            
-//            DISP=SHR                                     
-//OUTFILE  DD DSN=PROD001.UNTRS,
-//            DISP=(NEW,CATLG),                            
-//            SPACE=(CYL,(10,10,10))  
+//TERSE    EXEC PGM=TRSMAIN,PARM='PACK'
+//SYSPRINT DD SYSOUT=*
+//INFILE   DD DISP=SHR,DSN=PROD001.LIB.REXX
+//OUTFILE  DD DSN=PROD001.TRS,
+//            DCB=(RECFM=FB,BLKSIZE=6144,LRECL=1024),
+//            UNIT=SYSDA,SPACE=(CYL,(750,200),RLSE),
+//            DISP=(NEW,CATLG,DELETE)

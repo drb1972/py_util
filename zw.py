@@ -1,7 +1,6 @@
 import subprocess
 import json
 
-
 # execute_command
 # args: 
 #    'command'(str) command to be executed

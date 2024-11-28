@@ -2,6 +2,12 @@ import sys
 import argparse
 import os
 import zw
+from colorama import init, Fore, Back, Style
+init()
+import time
+start_time = time.time()
+
+init()
 
 try:
    parser = argparse.ArgumentParser(description='Unterse file and open in VSCode')
@@ -24,7 +30,8 @@ if not os.path.isfile(local_file):
 
 # find userid to set HLQ
 hlq=zw.find_userid().upper()
-print('userid: '+hlq)
+print(Fore.YELLOW + Back.BLUE + f'userid: {hlq}')
+print(Style.RESET_ALL)
 
 remote_file_tersed=hlq + '.TRS'
 remote_file_untersed=hlq + '.UNTRS'
@@ -60,9 +67,13 @@ print(jobid)
 if rc!='CC 0000':
    sysprint='.\\out\\'+jobid+'\\UNTERPDS\\SYSPRINT.txt'
    os.system('code '+sysprint)
-elif type=='seq':
+elif type=='SEQ':
    local_untersed='.\\out\\untersed.txt'
    zw.download_zos_file(remote_file_untersed,local_untersed)
    os.system('code '+local_untersed)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Elapsed time: {elapsed_time} seconds")
 
 exit()
