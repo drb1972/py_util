@@ -3,7 +3,7 @@
 # conn = http.client.HTTPSConnection("b043.lvn.broadcom.net:7554")
 
 # headers = {
-#     'Authorization': 'Basic ' + 'cHJvZDAwMTpQeXRob24yMQ==',
+#     'Authorization': 'Basic ' + 'base64pwd',
 #     'X-CSRF-ZOSMF-HEADER': ""
 #     }
 
